@@ -1,0 +1,122 @@
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-lg-5">
+
+      <!-- Greeting -->
+      <h4 class="mb-4 text-center">
+        Hi, <strong>{{ name }}</strong> 👋
+      </h4>
+
+      <form [formGroup]="form" (ngSubmit)="submit()">
+
+        <!-- Old Password -->
+        <div class="mb-3">
+          <label class="form-label">Old Password</label>
+
+          <div class="input-group">
+            <input
+              [type]="showOldPassword ? 'text' : 'password'"
+              class="form-control"
+              formControlName="oldPassword"
+            />
+            <button
+              type="button"
+              class="btn button"
+              (click)="showOldPassword = !showOldPassword"
+            >
+              <i class="fa-solid" [ngClass]="showOldPassword ? ' fa-eye-slash' : ' fa-eye'"></i>
+            </button>
+          </div>
+
+          <small
+            class="text-danger"
+            *ngIf="form.get('oldPassword')?.touched && form.get('oldPassword')?.invalid"
+          >
+            Old password is required
+          </small>
+        </div>
+
+        <!-- New Password -->
+        <div class="mb-3">
+          <label class="form-label">New Password</label>
+
+          <div class="input-group">
+            <input
+              [type]="showNewPassword ? 'text' : 'password'"
+              class="form-control"
+              formControlName="newPassword"
+            />
+            <button
+              type="button"
+              class="btn button"
+              (click)="showNewPassword = !showNewPassword"
+            >
+              <i class="fa-solid" [ngClass]="showNewPassword ? ' fa-eye-slash' : ' fa-eye'"></i>
+            </button>
+          </div>
+
+          <small
+            class="text-danger d-block"
+            *ngIf="form.get('newPassword')?.touched && form.get('newPassword')?.errors?.['required']"
+          >
+            New password is required
+          </small>
+
+          <small
+            class="text-danger d-block"
+            *ngIf="form.get('newPassword')?.touched && form.get('newPassword')?.errors?.['minlength']"
+          >
+            Password must be at least 6 characters
+          </small>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mb-3">
+          <label class="form-label">Confirm New Password</label>
+
+          <div class="input-group">
+            <input
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              class="form-control"
+              formControlName="confirmPassword"
+            />
+            <button
+              type="button"
+              class="btn button"
+              (click)="showConfirmPassword = !showConfirmPassword"
+            >
+              <i class="fa-solid" [ngClass]="showConfirmPassword ? ' fa-eye-slash' : ' fa-eye'"></i>
+            </button>
+          </div>
+
+          <small
+            class="text-danger"
+            *ngIf="form.get('confirmPassword')?.touched && form.get('confirmPassword')?.invalid"
+          >
+            Confirmation is required
+          </small>
+        </div>
+
+        <!-- General Error -->
+        <div *ngIf="submitError" class="alert alert-danger text-center py-2">
+          {{ submitError }}
+        </div>
+
+        <!-- Success -->
+        <div *ngIf="submitSuccess" class="alert alert-success text-center py-2">
+          {{ submitSuccess }}
+        </div>
+
+        <button
+          type="submit"
+          class="btn button w-100"
+          [disabled]="submitLoading"
+        >
+          {{ submitLoading ? 'Saving...' : 'Change Password' }}
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+</div>

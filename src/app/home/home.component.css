@@ -1,0 +1,51 @@
+.login-section {
+  min-height: 100vh;
+  background-image: url('/assets/bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Glass / Blur Container */
+.login-card {
+  width: 100%;
+  max-width: 400px;
+
+  background: rgba(255, 255, 255, 0.15);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.login-card h3 {
+  color: #fff;
+}
+
+.login-card .form-control {
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+}
+
+.login-card .form-control:focus {
+  box-shadow: none;
+  border: none;
+}
+
+
+.button {
+  background-color: #FDA14D;
+  border: 1px solid #FDA14D;
+}
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  user-select: none;
+}

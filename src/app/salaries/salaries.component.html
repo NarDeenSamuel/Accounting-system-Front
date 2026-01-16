@@ -1,0 +1,111 @@
+<div class="container mt-4">
+
+  <!-- FILTER -->
+  <select class="form-select mb-3"
+          [(ngModel)]="selectedMonth"
+          (change)="applyFilters()">
+    <option value="">All Months</option>
+    <option *ngFor="let m of months" [value]="m.value">
+      {{ m.label }}
+    </option>
+  </select>
+
+  <p *ngIf="loading" class="text-center">Loading...</p>
+
+  <div *ngIf="!loading && filteredSalaries.length">
+
+    <div class="border rounded p-3 mb-3"
+         *ngFor="let s of filteredSalaries">
+
+      <!-- VIEW -->
+      <div *ngIf="editingId !== s._id">
+        <p><strong>Name:</strong> {{ s.title }}</p>
+        <p><strong>Amount:</strong> {{ s.totalAmount }} EGP</p>
+        <p><strong>Month:</strong> {{ s.month }}</p>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-primary"
+                  (click)="startEdit(s._id)">
+            Edit
+          </button>
+          <button class="btn btn-sm btn-danger"
+                  (click)="openDeleteModal(s._id)">
+            Delete
+          </button>
+        </div>
+      </div>
+
+      <!-- EDIT -->
+      <div *ngIf="editingId === s._id">
+        <form [formGroup]="editForms[s._id]">
+          <input class="form-control mb-2" formControlName="title">
+          <input class="form-control mb-2" type="number" formControlName="totalAmount">
+        </form>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-success btn-sm"
+                  (click)="updateSalary(s)">
+            Done
+          </button>
+          <button class="btn btn-secondary btn-sm"
+                  (click)="cancelEdit()">
+            Cancel
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TOTAL -->
+    <div class="fw-bold text-end border-top pt-2">
+      Total Salaries: {{ getTotal() }} EGP
+    </div>
+
+    <button class="btn btn-success w-100 mt-3"
+            (click)="openAddModal()">
+      Add Salary
+    </button>
+  </div>
+
+  <p *ngIf="!loading && !filteredSalaries.length"
+     class="text-center text-muted">
+    No salaries found
+  </p>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal fade" id="deleteModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+      <p>Are you sure?</p>
+      <div class="d-flex gap-2">
+        <button class="btn btn-secondary w-100" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button class="btn btn-danger w-100" (click)="confirmDelete()">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MODAL -->
+<div class="modal fade" id="addSalaryModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+
+      <form [formGroup]="addForm">
+        <input class="form-control mb-2" placeholder="Name" formControlName="title">
+        <input class="form-control mb-2" type="number" placeholder="Amount" formControlName="totalAmount">
+        <input class="form-control mb-2" type="month" formControlName="month">
+      </form>
+
+      <div class="d-flex gap-2">
+        <button class="btn btn-success w-100" (click)="submitAdd()">Add</button>
+        <button class="btn btn-secondary w-100" data-bs-dismiss="modal">Cancel</button>
+      </div>
+
+    </div>
+  </div>
+</div>

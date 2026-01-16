@@ -1,0 +1,124 @@
+<div class="container mt-4">
+
+  <!-- FILTER -->
+  <div class="row mb-3">
+    <div class="col-md-4">
+      <select
+        class="form-select"
+        [(ngModel)]="selectedMonth"
+        (change)="loadReport()"
+      >
+        <option *ngFor="let m of months" [value]="m.value">
+          {{ m.label }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <p *ngIf="loading" class="text-center">Loading report...</p>
+
+  <div *ngIf="!loading">
+
+    <!-- SUMMARY -->
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <div class="alert alert-success">
+          <strong>Total Payments:</strong> {{ getTotalPayments() }} EGP
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="alert alert-danger">
+          <strong>Total Expenses:</strong> {{ getTotalExpenses() }} EGP
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="alert alert-warning">
+          <strong>Total Salaries:</strong> {{ getTotalSalaries() }} EGP
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= PAYMENTS ================= -->
+    <h5>Payments</h5>
+
+    <div
+      *ngFor="let p of payments"
+      class="border rounded p-2 mb-2 d-flex justify-content-between align-items-start"
+    >
+      <!-- LEFT -->
+      <div>
+        <p class="fw-bold mb-1">{{ p.paymentMethod }}</p>
+        <small class="text-muted">{{ p.paymentDate | date }}</small>
+      </div>
+
+      <!-- RIGHT -->
+      <div class="text-end">
+        <p class="fw-bold mb-1">{{ p.amount }} EGP</p>
+        <small class="text-muted">{{ p.note || '-' }}</small>
+      </div>
+    </div>
+
+    <hr>
+
+    <!-- ================= EXPENSES ================= -->
+    <h5>Expenses</h5>
+
+    <div
+      *ngFor="let e of expenses"
+      class="border rounded p-2 mb-2 d-flex justify-content-between"
+    >
+      <span class="fw-bold">{{ e.title }}</span>
+      <span class="text-danger">{{ e.amount }} EGP</span>
+    </div>
+
+    <hr>
+
+    <!-- ================= SALARIES ================= -->
+    <h5>Salaries</h5>
+
+    <div
+      *ngFor="let s of salaries"
+      class="border rounded p-2 mb-2 d-flex justify-content-between"
+    >
+      <span class="fw-bold">{{ s.title }}</span>
+      <span class="text-warning">{{ s.totalAmount }} EGP</span>
+    </div>
+
+    <hr>
+
+    <!-- ================= PENDING PROJECTS ================= -->
+    <h5>Pending Projects</h5>
+
+    <div
+      *ngFor="let p of pendingProjects"
+      class="border rounded p-2 mb-2"
+    >
+      <div class="d-flex justify-content-between">
+        <strong>{{ p.project.title }}</strong>
+        <span>{{ p.project.totalAmount }} EGP</span>
+      </div>
+
+      <div class="d-flex justify-content-between text-muted mt-1">
+        <span>Paid: {{ p.totalPaid }} EGP</span>
+        <span>Remaining: {{ p.remaining }} EGP</span>
+      </div>
+    </div>
+
+    <!-- ================= PROFIT ================= -->
+    <hr>
+
+    <div class="alert alert-info text-center fw-bold">
+      Net Profit:
+      <span
+        [class.text-success]="getProfit() >= 0"
+        [class.text-danger]="getProfit() < 0"
+      >
+        {{ getProfit() }} EGP
+      </span>
+    </div>
+
+  </div>
+
+</div>

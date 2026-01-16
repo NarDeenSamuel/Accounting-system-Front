@@ -1,0 +1,130 @@
+<div class="projects-container">
+
+  <p *ngIf="loading" class="text-center">Loading...</p>
+
+  <div
+    class="accordion"
+    id="paymentsAccordion"
+    *ngIf="!loading && projects.length"
+  >
+
+    <div
+      class="accordion-item project-card"
+      *ngFor="let project of projects; let i = index"
+        [hidden]="project.status === 'completed'"
+
+    >
+
+      <!-- Header -->
+      <h2 class="accordion-header">
+        <button
+  class="accordion-button collapsed project-header"
+  type="button"
+  data-bs-toggle="collapse"
+  [attr.data-bs-target]="'#payment' + i"
+  (click)="$event.stopPropagation()"
+>
+  {{ project.title }}
+</button>
+
+      </h2>
+
+      <!-- Body -->
+      <div
+        [id]="'payment' + i"
+        class="accordion-collapse collapse"
+        data-bs-parent="#paymentsAccordion"
+      >
+        <div class="accordion-body project-body">
+
+          <!-- Info -->
+          <p><strong>Client:</strong> {{ project.client.name }}</p>
+          <p><strong>Total Amount:</strong> {{ project.totalAmount }}</p>
+          <p><strong>Total Paid:</strong> {{ project.totalPaid }}</p>
+          <p>
+            <strong>Remaining:</strong>
+            <span class="text-success">{{ project.remainingAmount }}</span>
+          </p>
+
+          <hr />
+
+          <!-- Form -->
+          <form
+  [formGroup]="forms[project.projectId]"
+  (ngSubmit)="submit(project); $event.stopPropagation()"
+>
+
+
+            <div class="mb-2">
+              <label>Amount</label>
+              <input
+                type="number"
+                class="form-control"
+                formControlName="amount"
+              />
+            </div>
+
+            <div class="mb-2">
+              <label>Payment Date</label>
+              <input
+                type="date"
+                class="form-control"
+                formControlName="paymentDate"
+              />
+            </div>
+
+            <div class="mb-2">
+              <label>Payment Method</label>
+              <select
+                class="form-control"
+                formControlName="paymentMethod"
+              >
+                <option value="cash">Cash</option>
+                <option value="visa">Visa</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label>Note</label>
+              <input
+                type="text"
+                class="form-control"
+                formControlName="note"
+              />
+            </div>
+<!-- Error message -->
+<div
+  *ngIf="submitErrors[project.projectId]"
+  class="alert alert-warning py-2 mt-2"
+>
+  {{ submitErrors[project.projectId] }}
+</div>
+<div
+  *ngIf="submitSuccess[project.projectId]"
+  class="alert alert-success py-2 mt-2"
+>
+  Payment added successfully ✅
+</div>
+
+           <button
+  type="submit"
+  class="btn btn-primary w-100"
+  [disabled]="submitLoading[project.projectId]"
+>
+  {{ submitLoading[project.projectId] ? 'Saving...' : 'Add Payment' }}
+</button>
+
+
+          </form>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <p *ngIf="!loading && !projects.length" class="text-center text-muted">
+    No active projects
+  </p>
+
+</div>

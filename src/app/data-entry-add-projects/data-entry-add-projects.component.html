@@ -1,0 +1,73 @@
+<div class="card p-4 shadow-sm">
+  <h4 class="mb-3">Add Project</h4>
+
+  <form [formGroup]="projectForm" (ngSubmit)="submit()">
+
+    <div class="mb-3">
+      <label>Project Title</label>
+      <input type="text" class="form-control" formControlName="title">
+    </div>
+
+
+    <h6 class="mt-4">Client Info</h6>
+
+    <div formGroupName="client">
+      <div class="mb-3">
+        <label>Client Name</label>
+        <input type="text" class="form-control" formControlName="name">
+      </div>
+
+      <div class="mb-3">
+        <label>Client Phone</label>
+        <input type="text" class="form-control" formControlName="phone">
+      </div>
+
+      <div class="mb-3">
+        <label>Client Email</label>
+        <input type="email" class="form-control" formControlName="email">
+      </div>
+    </div>
+
+    <h6 class="mt-4">Project Details</h6>
+
+    <div class="mb-3">
+      <label>Total Amount</label>
+      <input type="number" class="form-control" formControlName="totalAmount">
+    </div>
+
+    <div class="mb-3">
+      <label>Expected Payments</label>
+      <input type="number" class="form-control" formControlName="expectedPayments">
+    </div>
+
+    <div class="row">
+      <div class="col-md-6 mb-3">
+        <label>Start Date</label>
+        <input type="date" class="form-control" formControlName="startDate">
+      </div>
+
+      <div class="col-md-6 mb-3">
+        <label>End Date</label>
+        <input type="date" class="form-control" formControlName="endDate">
+      </div>
+    </div>
+
+    <p class="text-danger" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+    <button type="submit" class="btn button w-100">
+      Save Project
+    </button>
+  </form>
+  <!-- ✅ Success Overlay -->
+<div class="success-overlay" *ngIf="showSuccess">
+  <div class="checkmark-wrapper">
+    <svg class="checkmark" viewBox="0 0 52 52">
+      <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+      <path class="checkmark-check" fill="none"
+        d="M14 27l7 7 17-17"/>
+    </svg>
+    <p>Project Saved Successfully</p>
+  </div>
+</div>
+
+</div>

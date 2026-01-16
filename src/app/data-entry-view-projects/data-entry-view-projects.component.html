@@ -1,0 +1,107 @@
+<div class="projects-container">
+
+  <p *ngIf="loading">Loading...</p>
+
+  <ng-container *ngIf="!loading">
+
+    <div *ngFor="let section of sections">
+
+      <h4 class="mb-3 text-center">{{ section.title }}</h4>
+
+      <div
+        class="accordion"
+        [id]="'accordion-' + section.key"
+        *ngIf="section.items.length; else emptySection"
+      >
+
+        <div
+          class="accordion-item project-card"
+          *ngFor="let project of section.items; let i = index"
+        >
+
+          <!-- Header -->
+          <h2 class="accordion-header">
+            <button
+              class="accordion-button collapsed project-header"
+              type="button"
+              data-bs-toggle="collapse"
+              [attr.data-bs-target]="'#' + section.key + i"
+            >
+              {{ project.title }}
+            </button>
+          </h2>
+
+          <!-- Body -->
+          <div
+            [id]="section.key + i"
+            class="accordion-collapse collapse"
+            [attr.data-bs-parent]="'#accordion-' + section.key"
+          >
+            <div class="accordion-body project-body">
+
+              <!-- Client -->
+              <p><strong>Client:</strong> {{ project.client.name }}</p>
+              <p><strong>Email:</strong> {{ project.client.email }}</p>
+              <p><strong>Phone:</strong> {{ project.client.phone }}</p>
+
+              <hr />
+
+              <!-- Financial -->
+              <p><strong>Total Amount:</strong> {{ project.totalAmount }}</p>
+              <p><strong>Total Paid:</strong> {{ project.totalPaid }}</p>
+
+              <p>
+                <strong>Remaining Amount:</strong>
+                <span
+                  [ngClass]="{
+                    'text-danger': project.remainingAmount < 0,
+                    'text-success': project.remainingAmount >= 0
+                  }"
+                >
+                  {{ project.remainingAmount }}
+                </span>
+              </p>
+
+              <hr />
+
+              <!-- Payments -->
+              <h6>Payments</h6>
+
+              <div *ngIf="project.payments.length; else noPayments">
+                <div *ngFor="let p of project.payments" class="payment-item">
+                  <p><strong>Amount:</strong> {{ p.amount }}</p>
+                  <p><strong>Date:</strong> {{ p.paymentDate | date }}</p>
+                  <p><strong>Method:</strong> {{ p.paymentMethod }}</p>
+                  <p><strong>Note:</strong> {{ p.note }}</p>
+                  <hr />
+                </div>
+              </div>
+
+              <ng-template #noPayments>
+                <p class="text-muted">No payments yet</p>
+              </ng-template>
+
+              <!-- Action -->
+              <button
+                *ngIf="project.status === 'active'"
+                class="btn btn-primary mt-3"
+                (click)="addPayment(project.projectId)"
+              >
+                Add Payment
+              </button>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <ng-template #emptySection>
+        <p class="text-muted  text-center">No projects in this section</p>
+      </ng-template>
+
+    </div>
+
+  </ng-container>
+
+</div>

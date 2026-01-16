@@ -1,0 +1,149 @@
+<div class="container mt-4">
+
+  <!-- FILTERS -->
+  <div class="row mb-3 g-2">
+    <div class="col-md-6">
+      <input class="form-control"
+             placeholder="Search by project name..."
+             [(ngModel)]="searchTerm"
+             (input)="applyFilters()">
+    </div>
+
+    <div class="col-md-6">
+      <select class="form-select"
+              [(ngModel)]="selectedMonth"
+              (change)="applyFilters()">
+        <option value="">All Months</option>
+        <option *ngFor="let m of months" [value]="m.value">
+          {{ m.label }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <p *ngIf="loading" class="text-center">Loading...</p>
+
+  <div class="accordion" *ngIf="!loading">
+
+    <div class="accordion-item mb-2"
+         *ngFor="let p of projects; let i = index">
+
+      <!-- HEADER -->
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed d-flex justify-content-between"
+                data-bs-toggle="collapse"
+                [attr.data-bs-target]="'#p' + i">
+          <span class="fw-bold">{{ p.title }}</span>
+          <!-- <span class="badge bg-secondary">{{ p.status }}</span> -->
+        </button>
+      </h2>
+
+      <!-- BODY -->
+      <div class="accordion-collapse collapse" [id]="'p' + i">
+        <div class="accordion-body">
+
+          <p><strong>Total:</strong> {{ p.totalAmount }} EGP</p>
+          <p class="text-primary"><strong>Paid:</strong> {{ getTotalPaid(p) }} EGP</p>
+          <p class="text-success"><strong>Remaining:</strong> {{ getRemaining(p) }} EGP</p>
+
+          <hr>
+
+          <h6>Payments</h6>
+
+          <div *ngFor="let pay of p.payments">
+
+            <!-- VIEW -->
+            <div *ngIf="editingPaymentId !== pay._id"
+                 class="border rounded p-2 mb-2">
+              <p><strong>Amount:</strong> {{ pay.amount }} EGP</p>
+              <p><strong>Date:</strong> {{ pay.paymentDate | date }}</p>
+              <p><strong>Method:</strong> {{ pay.paymentMethod }}</p>
+              <p><strong>Note:</strong> {{ pay.note || '-' }}</p>
+
+              <button class="btn btn-sm btn-primary me-2"
+                      (click)="startEditPayment(pay._id)">
+                Edit
+              </button>
+
+              <button class="btn btn-sm btn-danger"
+                      (click)="openDeleteModal(pay._id)">
+                Delete
+              </button>
+            </div>
+
+            <!-- EDIT -->
+            <div *ngIf="editingPaymentId === pay._id"
+                 class="border rounded p-2 mb-2">
+
+              <form [formGroup]="editPaymentForms[pay._id]">
+                <input class="form-control mb-2" type="number" formControlName="amount">
+                <input class="form-control mb-2" type="date" formControlName="paymentDate">
+                <input class="form-control mb-2" formControlName="paymentMethod">
+                <input class="form-control mb-2" formControlName="note">
+              </form>
+
+              <button class="btn btn-success btn-sm me-2"
+                      (click)="updatePayment(pay, p)">
+                Done
+              </button>
+
+              <button class="btn btn-secondary btn-sm"
+                      (click)="cancelEditPayment()">
+                Cancel
+              </button>
+            </div>
+
+          </div>
+
+          <button class="btn button2 w-100 mt-2"
+                  (click)="openAddPaymentModal(p._id)">
+            Add Payment
+          </button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal fade" id="deleteModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+      <p>Are you sure?</p>
+      <div class="d-flex gap-2">
+        <button class="btn btn-secondary w-100" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <button class="btn btn-danger w-100" (click)="confirmDelete()">
+          Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD PAYMENT MODAL -->
+<div class="modal fade" id="addPaymentModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content p-3">
+
+      <form [formGroup]="addPaymentForm">
+        <input class="form-control mb-2" placeholder="Amount" formControlName="amount">
+        <input class="form-control mb-2" type="date" formControlName="paymentDate">
+        <input class="form-control mb-2" placeholder="Method" formControlName="paymentMethod">
+        <input class="form-control mb-2" placeholder="Note" formControlName="note">
+      </form>
+
+      <div class="d-flex gap-2">
+        <button class="btn btn-success w-100" (click)="submitAddPayment()">
+          Save
+        </button>
+        <button class="btn btn-secondary w-100" data-bs-dismiss="modal">
+          Cancel
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
