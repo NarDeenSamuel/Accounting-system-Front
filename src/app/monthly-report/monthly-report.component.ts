@@ -67,7 +67,7 @@ export class MonthlyReportComponent implements OnInit {
     });
 
     this.http.get<any>(
-      `http://localhost:3000/dashboard/reports/monthly/details?month=${this.selectedMonth}`,
+      `https://accounting-system-rose.vercel.app/dashboard/reports/monthly/details?month=${this.selectedMonth}`,
       { headers }
     ).subscribe({
       next: (res) => {
