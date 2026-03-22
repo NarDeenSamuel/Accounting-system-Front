@@ -12,6 +12,7 @@
 
   <p *ngIf="loading" class="text-center">Loading...</p>
 
+  <!-- LIST -->
   <div *ngIf="!loading && filteredSalaries.length">
 
     <div class="border rounded p-3 mb-3"
@@ -61,16 +62,22 @@
       Total Salaries: {{ getTotal() }} EGP
     </div>
 
+  </div>
+
+  <!-- EMPTY STATE -->
+  <p *ngIf="!loading && !filteredSalaries.length"
+     class="text-center text-muted">
+    No salaries found
+  </p>
+
+  <!-- ADD BUTTON (دايمًا ظاهر) -->
+  <div *ngIf="!loading">
     <button class="btn btn-success w-100 mt-3"
             (click)="openAddModal()">
       Add Salary
     </button>
   </div>
 
-  <p *ngIf="!loading && !filteredSalaries.length"
-     class="text-center text-muted">
-    No salaries found
-  </p>
 </div>
 
 <!-- DELETE MODAL -->
